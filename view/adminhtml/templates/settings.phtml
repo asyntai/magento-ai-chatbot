@@ -1,0 +1,79 @@
+<?php
+/**
+ * Asyntai Chatbot Settings Template
+ *
+ * @category  Asyntai
+ * @package   Asyntai_Chatbot
+ * @author    Asyntai <hello@asyntai.com>
+ * @copyright Copyright (c) Asyntai
+ * @license   MIT License
+ *
+ * @var $block \Asyntai\Chatbot\Block\Adminhtml\Settings
+ */
+
+$config = $block->getConfig();
+$siteId = $config->getSiteId();
+$accountEmail = $config->getAccountEmail();
+$scriptUrl = $config->getScriptUrl();
+?>
+
+<div id="asyntai-settings-wrap">
+    <h1><?php echo __('Asyntai AI Chatbot'); ?></h1>
+
+    <p id="asyntai-status">
+        <?php echo __('Status:'); ?>
+        <span style="color:<?php echo $siteId ? '#28a745' : '#dc3545'; ?>;font-weight:600;">
+            <?php echo $siteId ? __('Connected') : __('Not connected'); ?>
+        </span>
+        <?php if ($siteId && $accountEmail): ?>
+            <?php echo __('as') . ' ' . $this->escapeHtml($accountEmail); ?>
+        <?php endif; ?>
+        <?php if ($siteId): ?>
+            <button type="button" id="asyntai-reset" class="action-default" style="margin-left: 12px;">
+                <?php echo __('Reset'); ?>
+            </button>
+        <?php endif; ?>
+    </p>
+
+    <div id="asyntai-alert" style="display:none;"></div>
+
+    <div id="asyntai-connected-box" style="display:<?php echo $siteId ? 'block' : 'none'; ?>;">
+        <div style="padding:32px;border:1px solid #ddd;border-radius:8px;background:#fff;text-align:center;">
+            <h2><?php echo __('Asyntai is now enabled'); ?></h2>
+            <p class="asyntai-connected-text"><?php echo __('Set up your AI chatbot, review chat logs and more:'); ?></p>
+            <a class="action-primary" href="https://asyntai.com/dashboard" target="_blank" rel="noopener">
+                <?php echo __('Open Asyntai Panel'); ?>
+            </a>
+            <p style="margin:20px 0 0;color:#666;">
+                <strong><?php echo __('Tip:'); ?></strong> <?php echo __('If you want to change how the AI answers, please'); ?>
+                <a href="https://asyntai.com/dashboard#setup" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:underline;">
+                    <?php echo __('go here'); ?>
+                </a>.
+            </p>
+        </div>
+    </div>
+
+    <div id="asyntai-popup-wrap" style="display:<?php echo $siteId ? 'none' : 'block'; ?>;">
+        <div style="padding:32px;border:1px solid #ddd;border-radius:8px;background:#fff;text-align:center;">
+            <p class="asyntai-intro-text"><?php echo __('Create a free Asyntai account or sign in to enable the chatbot'); ?></p>
+            <button type="button" id="asyntai-connect-btn" class="action-primary">
+                <?php echo __('Get started'); ?>
+            </button>
+            <p style="margin:16px 0 0;color:#666;">
+                <?php echo __('If it doesn\'t work,'); ?>
+                <a href="#" id="asyntai-fallback-link" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:underline;">
+                    <?php echo __('open the connect window'); ?>
+                </a>.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    require(['jquery', 'Asyntai_Chatbot/js/admin'], function($, asyntaiAdmin) {
+        asyntaiAdmin.init({
+            saveUrl: '<?php echo $block->getUrl('asyntai/api/save'); ?>',
+            resetUrl: '<?php echo $block->getUrl('asyntai/api/reset'); ?>'
+        });
+    });
+</script>

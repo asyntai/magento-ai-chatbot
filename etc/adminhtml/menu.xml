@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Asyntai Chatbot admin menu
+ *
+ * @category  Asyntai
+ * @package   Asyntai_Chatbot
+ * @author    Asyntai <hello@asyntai.com>
+ * @copyright Copyright (c) Asyntai
+ * @license   MIT License
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Asyntai_Chatbot::asyntai" title="Asyntai AI Chatbot" module="Asyntai_Chatbot" sortOrder="100" action="asyntai/settings/index" resource="Asyntai_Chatbot::config"/>
+    </menu>
+</config>

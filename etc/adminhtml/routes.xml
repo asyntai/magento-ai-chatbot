@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Asyntai Chatbot admin routes
+ *
+ * @category  Asyntai
+ * @package   Asyntai_Chatbot
+ * @author    Asyntai <hello@asyntai.com>
+ * @copyright Copyright (c) Asyntai
+ * @license   MIT License
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="asyntai" frontName="asyntai">
+            <module name="Asyntai_Chatbot" before="Magento_Backend"/>
+        </route>
+    </router>
+</config>

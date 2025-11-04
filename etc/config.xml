@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Asyntai Chatbot default configuration
+ *
+ * @category  Asyntai
+ * @package   Asyntai_Chatbot
+ * @author    Asyntai <hello@asyntai.com>
+ * @copyright Copyright (c) Asyntai
+ * @license   MIT License
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <asyntai_chatbot>
+            <settings>
+                <site_id></site_id>
+                <script_url>https://asyntai.com/static/js/chat-widget.js</script_url>
+                <account_email></account_email>
+            </settings>
+        </asyntai_chatbot>
+    </default>
+</config>

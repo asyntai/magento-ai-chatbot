@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Asyntai Chatbot Settings Layout
+ *
+ * @category  Asyntai
+ * @package   Asyntai_Chatbot
+ * @author    Asyntai <hello@asyntai.com>
+ * @copyright Copyright (c) Asyntai
+ * @license   MIT License
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Asyntai_Chatbot::css/admin.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Asyntai\Chatbot\Block\Adminhtml\Settings" name="asyntai.settings" template="Asyntai_Chatbot::settings.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

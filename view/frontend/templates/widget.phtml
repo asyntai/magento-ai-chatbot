@@ -1,0 +1,21 @@
+<?php
+/**
+ * Asyntai Chatbot Widget Template
+ *
+ * @category  Asyntai
+ * @package   Asyntai_Chatbot
+ * @author    Asyntai <hello@asyntai.com>
+ * @copyright Copyright (c) Asyntai
+ * @license   MIT License
+ *
+ * @var $block \Asyntai\Chatbot\Block\Widget
+ */
+
+if (!$block->shouldDisplay()) {
+    return;
+}
+
+$siteId = $block->getSiteId();
+$scriptUrl = $block->getScriptUrl();
+?>
+<script src="<?php echo $this->escapeUrl($scriptUrl); ?>" async defer data-asyntai-id="<?php echo $this->escapeHtmlAttr($siteId); ?>"></script>

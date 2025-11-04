@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Asyntai Chatbot ACL
+ *
+ * @category  Asyntai
+ * @package   Asyntai_Chatbot
+ * @author    Asyntai <hello@asyntai.com>
+ * @copyright Copyright (c) Asyntai
+ * @license   MIT License
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Asyntai_Chatbot::asyntai" title="Asyntai AI Chatbot" sortOrder="100">
+                    <resource id="Asyntai_Chatbot::config" title="Settings" sortOrder="10"/>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
