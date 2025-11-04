@@ -1,4 +1,4 @@
-# Asyntai - AI Chatbot
+# Asyntai - AI Chatbot For Magento/Adobe Commerce
 
 Create and launch AI assistant/chatbot for your website in minutes. It talks to your visitors, helps, explains, never misses a chat and can increase conversion rates! All while knowing your website, customized just for you. Your website can now talk.
 
@@ -66,3 +66,4 @@ Email us at hello@asyntai.com or try our chatbot directly at [asyntai.com/](http
 ![Asyntai AI chatbot 3](https://asyntai.com/static/images/ai-chatbot-for-websites-3.png)
 ![Asyntai AI chatbot 4](https://asyntai.com/static/images/ai-chatbot-for-websites-4.png)
 ![Asyntai AI chatbot 5](https://asyntai.com/static/images/ai-chatbot-for-websites-5.png)
+
