@@ -1,9 +1,8 @@
-# Asyntai - AI Chatbot For Magento/Adobe Commerce
+# Asyntai AI Chatbot For Magento
 
 Create and launch AI assistant/chatbot for your website in minutes. It talks to your visitors, helps, explains, never misses a chat and can increase conversion rates! All while knowing your website, customized just for you. Your website can now talk.
 
 This extension embeds the Asyntai chatbot on your site and provides a simple admin interface to connect your site to Asyntai.
-
 
 ## Why choose Asyntai?
 
@@ -17,9 +16,10 @@ This extension embeds the Asyntai chatbot on your site and provides a simple adm
 
 • **Fast responses (1–3s)**: Keeps customers from bouncing.
 
+
 ## Installation
 
-1. Copy the extension folder to `app/code/Asyntai/Chatbot/`
+1. Copy the extension folder to `app/code/Asyntai/Chatbot/` or install with Composer `composer require asyntai/magento-ai-chatbot`
 2. Enable the module:
    ```bash
    php bin/magento module:enable Asyntai_Chatbot
@@ -28,6 +28,8 @@ This extension embeds the Asyntai chatbot on your site and provides a simple adm
    php bin/magento cache:flush
    ```
 3. Navigate to Admin Panel → Asyntai AI Chatbot
+
+Note: Alternatively, if you don't want to use an extension, you can also get a JavaScript snippet at  [asyntai.com/dashboard](https://asyntai.com/dashboard) and manually insert it into your web pages.
 
 ## Configuration
 
@@ -54,16 +56,22 @@ Once connected, you can manage your chatbot settings, review chat logs, and cust
 - Magento 2.4.0 or higher
 - PHP 7.4 or higher
 - Backend admin access for configuration
-
+- If your Magento version is not compatible, you can still use Asyntai by getting a JavaScript snippet from [asyntai.com/dashboard](https://asyntai.com/dashboard)
 
 
 ## Have a question?
 Email us at hello@asyntai.com or try our chatbot directly at [asyntai.com/](https://asyntai.com/)
 
 
+
 ![Asyntai AI chatbot 1](https://asyntai.com/static/images/ai-chatbot-for-websites-1.png)
+
 ![Asyntai AI chatbot 2](https://asyntai.com/static/images/ai-chatbot-for-websites-2.png)
+
 ![Asyntai AI chatbot 3](https://asyntai.com/static/images/ai-chatbot-for-websites-3.png)
+
 ![Asyntai AI chatbot 4](https://asyntai.com/static/images/ai-chatbot-for-websites-4.png)
+
 ![Asyntai AI chatbot 5](https://asyntai.com/static/images/ai-chatbot-for-websites-5.png)
+
 
