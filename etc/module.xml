@@ -11,7 +11,11 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Asyntai_Chatbot" setup_version="1.0.0">
-        <sequence/>
+    <module name="Asyntai_Chatbot" setup_version="1.1.0">
+        <sequence>
+            <module name="Magento_Backend"/>
+            <module name="Magento_Store"/>
+            <module name="Magento_Integration"/>
+        </sequence>
     </module>
 </config>

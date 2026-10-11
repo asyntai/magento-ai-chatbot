@@ -17,6 +17,7 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
+use Asyntai\Chatbot\Model\CatalogAccess;
 use Asyntai\Chatbot\Model\Config;
 
 class Reset extends Action implements CsrfAwareActionInterface
@@ -37,18 +38,26 @@ class Reset extends Action implements CsrfAwareActionInterface
     protected $config;
 
     /**
+     * @var CatalogAccess
+     */
+    protected $catalogAccess;
+
+    /**
      * @param Context $context
      * @param JsonFactory $resultJsonFactory
      * @param Config $config
+     * @param CatalogAccess $catalogAccess
      */
     public function __construct(
         Context $context,
         JsonFactory $resultJsonFactory,
-        Config $config
+        Config $config,
+        CatalogAccess $catalogAccess
     ) {
         parent::__construct($context);
         $this->resultJsonFactory = $resultJsonFactory;
         $this->config = $config;
+        $this->catalogAccess = $catalogAccess;
     }
 
     /**
@@ -61,6 +70,9 @@ class Reset extends Action implements CsrfAwareActionInterface
         $result = $this->resultJsonFactory->create();
 
         try {
+            // Take the read-only integration back as well, so a merchant who
+            // disconnects is left with no live token on their store.
+            $this->catalogAccess->revoke();
             $this->config->resetSettings();
 
             return $result->setData([

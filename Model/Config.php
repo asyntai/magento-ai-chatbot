@@ -21,6 +21,26 @@ class Config
     const XML_PATH_SITE_ID = 'asyntai_chatbot/settings/site_id';
     const XML_PATH_SCRIPT_URL = 'asyntai_chatbot/settings/script_url';
     const XML_PATH_ACCOUNT_EMAIL = 'asyntai_chatbot/settings/account_email';
+    const XML_PATH_CATALOG_STATUS = 'asyntai_chatbot/settings/catalog_status';
+
+    /**
+     * Where the widget script lives now. It moved to its own subdomain, so a
+     * store that connected before this release still holds the old address in
+     * its configuration. getScriptUrl() rewrites that address as it is read,
+     * which moves every existing store on update without anybody reconnecting.
+     */
+    const WIDGET_ORIGIN = 'https://widget.asyntai.com';
+    const SCRIPT_URL = self::WIDGET_ORIGIN . '/static/js/chat-widget.js';
+
+    /**
+     * The addresses the widget script used to be served from.
+     */
+    const LEGACY_SCRIPT_URLS = [
+        'https://asyntai.com/static/js/chat-widget.js',
+        'https://www.asyntai.com/static/js/chat-widget.js',
+        'http://asyntai.com/static/js/chat-widget.js',
+        'http://www.asyntai.com/static/js/chat-widget.js',
+    ];
 
     /**
      * @var ScopeConfigInterface
@@ -78,7 +98,37 @@ class Config
     public function getScriptUrl()
     {
         $url = trim((string)$this->scopeConfig->getValue(self::XML_PATH_SCRIPT_URL));
-        return $url ?: 'https://asyntai.com/static/js/chat-widget.js';
+        if (!$url) {
+            return self::SCRIPT_URL;
+        }
+        // Only the exact old address is rewritten. A merchant who set their
+        // own address on purpose keeps it.
+        if (in_array($url, self::LEGACY_SCRIPT_URLS, true)) {
+            return self::SCRIPT_URL;
+        }
+        return $url;
+    }
+
+    /**
+     * Get catalogue status: '' (never tried), 'connected' or 'unavailable'
+     *
+     * @return string
+     */
+    public function getCatalogStatus()
+    {
+        return trim((string)$this->scopeConfig->getValue(self::XML_PATH_CATALOG_STATUS));
+    }
+
+    /**
+     * Save catalogue status
+     *
+     * @param string $status
+     * @return void
+     */
+    public function setCatalogStatus($status)
+    {
+        $this->configWriter->save(self::XML_PATH_CATALOG_STATUS, (string)$status);
+        $this->flushCache();
     }
 
     /**
@@ -119,8 +169,9 @@ class Config
     public function resetSettings()
     {
         $this->configWriter->save(self::XML_PATH_SITE_ID, '');
-        $this->configWriter->save(self::XML_PATH_SCRIPT_URL, 'https://asyntai.com/static/js/chat-widget.js');
+        $this->configWriter->save(self::XML_PATH_SCRIPT_URL, self::SCRIPT_URL);
         $this->configWriter->save(self::XML_PATH_ACCOUNT_EMAIL, '');
+        $this->configWriter->save(self::XML_PATH_CATALOG_STATUS, '');
         $this->flushCache();
     }
 

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Asyntai Chatbot content security policy
+ *
+ * The chatbot is one script served by Asyntai. It talks to Asyntai for its
+ * answers and shows language flags from flagcdn.com. A store that enforces
+ * its policy would otherwise block all three.
+ *
+ * @category  Asyntai
+ * @package   Asyntai_Chatbot
+ * @author    Asyntai <hello@asyntai.com>
+ * @copyright Copyright (c) Asyntai
+ * @license   MIT License
+ */
+-->
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="asyntai_widget" type="host">widget.asyntai.com</value>
+                <value id="asyntai" type="host">asyntai.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="asyntai_widget" type="host">widget.asyntai.com</value>
+                <value id="asyntai" type="host">asyntai.com</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <value id="asyntai_widget" type="host">widget.asyntai.com</value>
+                <value id="asyntai" type="host">asyntai.com</value>
+                <value id="flagcdn" type="host">flagcdn.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

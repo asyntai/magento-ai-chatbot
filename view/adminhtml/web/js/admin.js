@@ -13,8 +13,14 @@ define([
 ], function ($) {
     'use strict';
 
-    var currentState = null;
     var config = {};
+    var busy = false;
+
+    /** How long to keep asking Asyntai whether the merchant has signed in.
+     *  150 tries two seconds apart is five minutes, which is what a merchant
+     *  who has to create an account first actually needs. */
+    var MAX_POLLS = 150;
+    var POLL_DELAY = 2000;
 
     function showAlert(msg, ok) {
         var el = $('#asyntai-alert');
@@ -25,58 +31,96 @@ define([
         el.text(msg);
     }
 
-    function generateState() {
-        return 'magento_' + Math.random().toString(36).substr(2, 9);
+    function connectUrl(state) {
+        return 'https://asyntai.com/wp-auth/?platform=magento&state=' + encodeURIComponent(state);
     }
 
-    function updateFallbackLink() {
-        var fallbackLink = $('#asyntai-fallback-link');
-        if (fallbackLink.length && currentState) {
-            fallbackLink.attr('href', 'https://asyntai.com/wp-auth?platform=magento&state=' + encodeURIComponent(currentState));
-        }
-    }
-
-    function openPopup() {
-        currentState = generateState();
-        updateFallbackLink();
-        var base = 'https://asyntai.com/wp-auth?platform=magento';
-        var url = base + (base.indexOf('?') > -1 ? '&' : '?') + 'state=' + encodeURIComponent(currentState);
+    /**
+     * Open the window during the click, before anything asynchronous, so the
+     * browser does not treat it as an unrequested popup. Its address is set
+     * once the server has handed back a state.
+     */
+    function openBlankWindow() {
         var w = 800, h = 720;
         var y = window.top.outerHeight / 2 + window.top.screenY - (h / 2);
         var x = window.top.outerWidth / 2 + window.top.screenX - (w / 2);
-        var pop = window.open(url, 'asyntai_connect', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=' + w + ',height=' + h + ',top=' + y + ',left=' + x);
-
-        // Check if popup was blocked after a short delay
-        setTimeout(function () {
-            if (!pop || pop.closed || typeof pop.closed == 'undefined') {
-                showAlert('Popup blocked. Please allow popups or use the link below.', false);
-                return;
-            }
-            pollForConnection(currentState);
-        }, 100);
+        return window.open('about:blank', 'asyntai_connect',
+            'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width='
+            + w + ',height=' + h + ',top=' + y + ',left=' + x);
     }
 
-    function pollForConnection(state) {
-        var attempts = 0;
-        function check() {
-            if (attempts++ > 60) return;
-            var script = document.createElement('script');
-            var cb = 'asyntai_cb_' + Date.now();
-            script.src = 'https://asyntai.com/connect-status.js?state=' + encodeURIComponent(state) + '&cb=' + cb;
-            window[cb] = function (data) {
-                try { delete window[cb]; } catch (e) { }
-                if (data && data.site_id) {
-                    saveConnection(data);
-                    return;
-                }
-                setTimeout(check, 500);
-            };
-            script.onerror = function () {
-                setTimeout(check, 1000);
-            };
-            document.head.appendChild(script);
+    /**
+     * Ask the store to make a state and, where the store allows it, a
+     * read-only catalogue token parked at Asyntai under that state.
+     */
+    function startConnect() {
+        if (busy) return;
+        busy = true;
+
+        var pop = openBlankWindow();
+
+        $.ajax({
+            url: config.prepareUrl,
+            type: 'POST',
+            data: {
+                form_key: config.formKey,
+                include_orders: $('#asyntai-include-orders').is(':checked') ? 1 : 0
+            },
+            dataType: 'json'
+        }).done(function (json) {
+            busy = false;
+
+            if (!json || !json.success || !json.state) {
+                if (pop) pop.close();
+                showAlert('Could not start the connection. Please try again.', false);
+                return;
+            }
+
+            $('#asyntai-fallback-link').attr('href', connectUrl(json.state));
+
+            if (json.message) {
+                showAlert(json.message, json.catalog === 'staged');
+            }
+
+            if (!pop || pop.closed) {
+                showAlert('Popup blocked. Please allow popups, or use the link below.', false);
+                return;
+            }
+
+            pop.location.href = connectUrl(json.state);
+            pollForConnection(json.state, 0);
+        }).fail(function () {
+            busy = false;
+            if (pop) pop.close();
+            showAlert('Could not start the connection. Please try again.', false);
+        });
+    }
+
+    /**
+     * Ask our own controller, which asks Asyntai. The browser never loads a
+     * script from outside the store.
+     */
+    function pollForConnection(state, attempt) {
+        if (attempt >= MAX_POLLS) {
+            showAlert('Still waiting for the sign-in to finish. '
+                + 'Reload this page once you are done in the other window.', false);
+            return;
         }
-        setTimeout(check, 800);
+
+        $.ajax({
+            url: config.pollUrl,
+            type: 'GET',
+            data: { state: state },
+            dataType: 'json'
+        }).done(function (json) {
+            if (json && json.ready && json.data && json.data.site_id) {
+                saveConnection(json.data);
+                return;
+            }
+            setTimeout(function () { pollForConnection(state, attempt + 1); }, POLL_DELAY);
+        }).fail(function () {
+            setTimeout(function () { pollForConnection(state, attempt + 1); }, POLL_DELAY);
+        });
     }
 
     function saveConnection(data) {
@@ -88,10 +132,8 @@ define([
         if (data.script_url) payload.script_url = data.script_url;
         if (data.account_email) payload.account_email = data.account_email;
 
-        var saveUrl = config.saveUrl;
-
         $.ajax({
-            url: saveUrl,
+            url: config.saveUrl,
             type: 'POST',
             data: JSON.stringify(payload),
             contentType: 'application/json',
@@ -154,10 +196,8 @@ define([
             return;
         }
 
-        var resetUrl = config.resetUrl;
-
         $.ajax({
-            url: resetUrl,
+            url: config.resetUrl,
             type: 'POST',
             data: JSON.stringify({ action: 'reset' }),
             contentType: 'application/json',
@@ -179,14 +219,9 @@ define([
         init: function (options) {
             config = options || {};
 
-            // Initialize fallback link on page load
-            currentState = generateState();
-            updateFallbackLink();
-
-            // Event handlers
             $(document).on('click', '#asyntai-connect-btn', function (e) {
                 e.preventDefault();
-                openPopup();
+                startConnect();
             });
 
             $(document).on('click', '#asyntai-reset', function (e) {
@@ -194,15 +229,14 @@ define([
                 resetConnection();
             });
 
+            // The link is a way out when the window is blocked. Until a state
+            // exists it has nothing to point at, so the click runs the same
+            // flow instead of following a dead address.
             $(document).on('click', '#asyntai-fallback-link', function (e) {
-                // Re-generate state and update link when clicked
-                currentState = generateState();
-                updateFallbackLink();
-                // Let the link work normally (target="_blank")
-                // Also start polling for this state
-                setTimeout(function () {
-                    pollForConnection(currentState);
-                }, 1000);
+                if (!$(this).attr('href')) {
+                    e.preventDefault();
+                    startConnect();
+                }
             });
         }
     };

@@ -15,6 +15,7 @@ $config = $block->getConfig();
 $siteId = $config->getSiteId();
 $accountEmail = $config->getAccountEmail();
 $scriptUrl = $config->getScriptUrl();
+$catalogStatus = $config->getCatalogStatus();
 ?>
 
 <div id="asyntai-settings-wrap">
@@ -45,6 +46,13 @@ $scriptUrl = $config->getScriptUrl();
                 <?php echo __('Open Asyntai Panel'); ?>
             </a>
             <p style="margin:20px 0 0;color:#666;">
+                <?php if ($catalogStatus === 'connected'): ?>
+                    <?php echo __('Live prices and stock are on. The assistant reads them from your catalogue.'); ?>
+                <?php elseif ($catalogStatus === 'unavailable'): ?>
+                    <?php echo __('The assistant answers from your pages. It is not reading live prices and stock.'); ?>
+                <?php endif; ?>
+            </p>
+            <p style="margin:20px 0 0;color:#666;">
                 <strong><?php echo __('Tip:'); ?></strong> <?php echo __('If you want to change how the AI answers, please'); ?>
                 <a href="https://asyntai.com/dashboard#setup" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:underline;">
                     <?php echo __('go here'); ?>
@@ -60,8 +68,14 @@ $scriptUrl = $config->getScriptUrl();
                 <?php echo __('Get started'); ?>
             </button>
             <p style="margin:16px 0 0;color:#666;">
+                <label for="asyntai-include-orders">
+                    <input type="checkbox" id="asyntai-include-orders" />
+                    <?php echo __('Also let the assistant look up orders for a customer'); ?>
+                </label>
+            </p>
+            <p style="margin:16px 0 0;color:#666;">
                 <?php echo __('If it doesn\'t work,'); ?>
-                <a href="#" id="asyntai-fallback-link" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:underline;">
+                <a id="asyntai-fallback-link" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:underline;cursor:pointer;">
                     <?php echo __('open the connect window'); ?>
                 </a>.
             </p>
@@ -73,7 +87,10 @@ $scriptUrl = $config->getScriptUrl();
     require(['jquery', 'Asyntai_Chatbot/js/admin'], function($, asyntaiAdmin) {
         asyntaiAdmin.init({
             saveUrl: '<?php echo $block->getUrl('asyntai/api/save'); ?>',
-            resetUrl: '<?php echo $block->getUrl('asyntai/api/reset'); ?>'
+            resetUrl: '<?php echo $block->getUrl('asyntai/api/reset'); ?>',
+            prepareUrl: '<?php echo $block->getUrl('asyntai/api/prepare'); ?>',
+            pollUrl: '<?php echo $block->getUrl('asyntai/api/poll'); ?>',
+            formKey: '<?php echo $block->escapeJs($block->getFormKey()); ?>'
         });
     });
 </script>

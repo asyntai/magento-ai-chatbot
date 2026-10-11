@@ -16,6 +16,8 @@ This extension embeds the Asyntai chatbot on your site and provides a simple adm
 
 • **Fast responses (1–3s)**: Keeps customers from bouncing.
 
+• **Knows your catalogue**: Quotes the price and the stock your store holds right now.
+
 
 ## Installation
 
@@ -44,6 +46,23 @@ After installation:
 
 Don't have an account yet? Create a free Asyntai account at [asyntai.com/auth](https://asyntai.com/auth)
 
+## Live prices and stock
+
+When you connect, the extension can also create a read-only integration in
+your own store, so the assistant answers with the price and the stock your
+catalogue holds at that moment rather than what your pages said when they were
+last read.
+
+- The integration is called **Asyntai AI Chatbot** and appears under
+  **System → Extensions → Integrations**. You can revoke it there at any
+  time, and Reset in the extension removes it as well.
+- It reads products, stock, CMS pages and your store's base settings. Order
+  lookup is added only if you tick the box when you connect.
+- Magento refuses an integration token until **Stores → Configuration →
+  Services → OAuth → Consumer Settings → "Allow OAuth Access Tokens to be
+  used as standalone Bearer tokens"** is set to Yes. The extension tells you
+  when it is off. The chatbot itself works either way.
+
 ## Managing Your Chatbot
 
 Once connected, you can manage your chatbot settings, review chat logs, and customize AI responses at:
@@ -54,10 +73,26 @@ Once connected, you can manage your chatbot settings, review chat logs, and cust
 ## Requirements
 
 - Magento 2.4.0 or higher
-- PHP 7.4 or higher
+- PHP 8.1 or higher
 - Backend admin access for configuration
 - If your Magento version is not compatible, you can still use Asyntai by getting a JavaScript snippet from [asyntai.com/dashboard](https://asyntai.com/dashboard)
 
+
+## Changelog
+
+### 1.1.0
+
+- The assistant can read live prices and stock from your catalogue through a
+  read-only integration you can revoke at any time.
+- Order lookup is available as an option when you connect.
+- The widget script now loads from `widget.asyntai.com`. Stores connected
+  before this release move over on update, with nothing to reconnect.
+- The connect window no longer loads a script from outside your store. The
+  extension asks Asyntai from PHP instead.
+
+### 1.0.0
+
+- First release.
 
 ## Have a question?
 Email us at hello@asyntai.com or try our chatbot directly at [asyntai.com/](https://asyntai.com/)
