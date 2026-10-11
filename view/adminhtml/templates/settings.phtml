@@ -8,75 +8,86 @@
  * @copyright Copyright (c) Asyntai
  * @license   MIT License
  *
- * @var $block \Asyntai\Chatbot\Block\Adminhtml\Settings
+ * @var \Asyntai\Chatbot\Block\Adminhtml\Settings $block
+ * @var \Magento\Framework\Escaper $escaper
  */
 
 $config = $block->getConfig();
 $siteId = $config->getSiteId();
 $accountEmail = $config->getAccountEmail();
-$scriptUrl = $config->getScriptUrl();
 $catalogStatus = $config->getCatalogStatus();
 ?>
 
 <div id="asyntai-settings-wrap">
-    <h1><?php echo __('Asyntai AI Chatbot'); ?></h1>
+    <h1><?= $escaper->escapeHtml(__('Asyntai AI Chatbot')) ?></h1>
 
     <p id="asyntai-status">
-        <?php echo __('Status:'); ?>
-        <span style="color:<?php echo $siteId ? '#28a745' : '#dc3545'; ?>;font-weight:600;">
-            <?php echo $siteId ? __('Connected') : __('Not connected'); ?>
+        <?= $escaper->escapeHtml(__('Status:')) ?>
+        <span style="color:<?= $siteId ? '#28a745' : '#dc3545' ?>;font-weight:600;">
+            <?= $escaper->escapeHtml($siteId ? __('Connected') : __('Not connected')) ?>
         </span>
         <?php if ($siteId && $accountEmail): ?>
-            <?php echo __('as') . ' ' . $this->escapeHtml($accountEmail); ?>
+            <?= $escaper->escapeHtml(__('as')) ?> <?= $escaper->escapeHtml($accountEmail) ?>
         <?php endif; ?>
         <?php if ($siteId): ?>
             <button type="button" id="asyntai-reset" class="action-default" style="margin-left: 12px;">
-                <?php echo __('Reset'); ?>
+                <?= $escaper->escapeHtml(__('Reset')) ?>
             </button>
         <?php endif; ?>
     </p>
 
     <div id="asyntai-alert" style="display:none;"></div>
 
-    <div id="asyntai-connected-box" style="display:<?php echo $siteId ? 'block' : 'none'; ?>;">
+    <div id="asyntai-connected-box" style="display:<?= $siteId ? 'block' : 'none' ?>;">
         <div style="padding:32px;border:1px solid #ddd;border-radius:8px;background:#fff;text-align:center;">
-            <h2><?php echo __('Asyntai is now enabled'); ?></h2>
-            <p class="asyntai-connected-text"><?php echo __('Set up your AI chatbot, review chat logs and more:'); ?></p>
+            <h2><?= $escaper->escapeHtml(__('Asyntai is now enabled')) ?></h2>
+            <p class="asyntai-connected-text">
+                <?= $escaper->escapeHtml(__('Set up your AI chatbot, review chat logs and more:')) ?>
+            </p>
             <a class="action-primary" href="https://asyntai.com/dashboard" target="_blank" rel="noopener">
-                <?php echo __('Open Asyntai Panel'); ?>
+                <?= $escaper->escapeHtml(__('Open Asyntai Panel')) ?>
             </a>
             <p style="margin:20px 0 0;color:#666;">
                 <?php if ($catalogStatus === 'connected'): ?>
-                    <?php echo __('Live prices and stock are on. The assistant reads them from your catalogue.'); ?>
+                    <?= $escaper->escapeHtml(
+                        __('Live prices and stock are on. The assistant reads them from your catalogue.')
+                    ) ?>
                 <?php elseif ($catalogStatus === 'unavailable'): ?>
-                    <?php echo __('The assistant answers from your pages. It is not reading live prices and stock.'); ?>
+                    <?= $escaper->escapeHtml(
+                        __('The assistant answers from your pages. It is not reading live prices and stock.')
+                    ) ?>
                 <?php endif; ?>
             </p>
             <p style="margin:20px 0 0;color:#666;">
-                <strong><?php echo __('Tip:'); ?></strong> <?php echo __('If you want to change how the AI answers, please'); ?>
-                <a href="https://asyntai.com/dashboard#setup" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:underline;">
-                    <?php echo __('go here'); ?>
+                <strong><?= $escaper->escapeHtml(__('Tip:')) ?></strong>
+                <?= $escaper->escapeHtml(__('If you want to change how the AI answers, please')) ?>
+                <a href="https://asyntai.com/dashboard#setup" target="_blank" rel="noopener"
+                   style="color:#2563eb;text-decoration:underline;">
+                    <?= $escaper->escapeHtml(__('go here')) ?>
                 </a>.
             </p>
         </div>
     </div>
 
-    <div id="asyntai-popup-wrap" style="display:<?php echo $siteId ? 'none' : 'block'; ?>;">
+    <div id="asyntai-popup-wrap" style="display:<?= $siteId ? 'none' : 'block' ?>;">
         <div style="padding:32px;border:1px solid #ddd;border-radius:8px;background:#fff;text-align:center;">
-            <p class="asyntai-intro-text"><?php echo __('Create a free Asyntai account or sign in to enable the chatbot'); ?></p>
+            <p class="asyntai-intro-text">
+                <?= $escaper->escapeHtml(__('Create a free Asyntai account or sign in to enable the chatbot')) ?>
+            </p>
             <button type="button" id="asyntai-connect-btn" class="action-primary">
-                <?php echo __('Get started'); ?>
+                <?= $escaper->escapeHtml(__('Get started')) ?>
             </button>
             <p style="margin:16px 0 0;color:#666;">
                 <label for="asyntai-include-orders">
                     <input type="checkbox" id="asyntai-include-orders" />
-                    <?php echo __('Also let the assistant look up orders for a customer'); ?>
+                    <?= $escaper->escapeHtml(__('Also let the assistant look up orders for a customer')) ?>
                 </label>
             </p>
             <p style="margin:16px 0 0;color:#666;">
-                <?php echo __('If it doesn\'t work,'); ?>
-                <a id="asyntai-fallback-link" target="_blank" rel="noopener" style="color:#2563eb;text-decoration:underline;cursor:pointer;">
-                    <?php echo __('open the connect window'); ?>
+                <?= $escaper->escapeHtml(__('If it does not work,')) ?>
+                <a id="asyntai-fallback-link" target="_blank" rel="noopener"
+                   style="color:#2563eb;text-decoration:underline;cursor:pointer;">
+                    <?= $escaper->escapeHtml(__('open the connect window')) ?>
                 </a>.
             </p>
         </div>
@@ -86,11 +97,11 @@ $catalogStatus = $config->getCatalogStatus();
 <script type="text/javascript">
     require(['jquery', 'Asyntai_Chatbot/js/admin'], function($, asyntaiAdmin) {
         asyntaiAdmin.init({
-            saveUrl: '<?php echo $block->getUrl('asyntai/api/save'); ?>',
-            resetUrl: '<?php echo $block->getUrl('asyntai/api/reset'); ?>',
-            prepareUrl: '<?php echo $block->getUrl('asyntai/api/prepare'); ?>',
-            pollUrl: '<?php echo $block->getUrl('asyntai/api/poll'); ?>',
-            formKey: '<?php echo $block->escapeJs($block->getFormKey()); ?>'
+            saveUrl: '<?= $escaper->escapeJs($block->getUrl('asyntai/api/save')) ?>',
+            resetUrl: '<?= $escaper->escapeJs($block->getUrl('asyntai/api/reset')) ?>',
+            prepareUrl: '<?= $escaper->escapeJs($block->getUrl('asyntai/api/prepare')) ?>',
+            pollUrl: '<?= $escaper->escapeJs($block->getUrl('asyntai/api/poll')) ?>',
+            formKey: '<?= $escaper->escapeJs($block->getFormKey()) ?>'
         });
     });
 </script>

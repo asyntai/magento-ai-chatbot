@@ -8,7 +8,8 @@
  * @copyright Copyright (c) Asyntai
  * @license   MIT License
  *
- * @var $block \Asyntai\Chatbot\Block\Widget
+ * @var \Asyntai\Chatbot\Block\Widget $block
+ * @var \Magento\Framework\Escaper $escaper
  */
 
 if (!$block->shouldDisplay()) {
@@ -18,4 +19,5 @@ if (!$block->shouldDisplay()) {
 $siteId = $block->getSiteId();
 $scriptUrl = $block->getScriptUrl();
 ?>
-<script src="<?php echo $this->escapeUrl($scriptUrl); ?>" async defer data-asyntai-id="<?php echo $this->escapeHtmlAttr($siteId); ?>"></script>
+<script src="<?= $escaper->escapeUrl($scriptUrl) ?>" async defer
+        data-asyntai-id="<?= $escaper->escapeHtmlAttr($siteId) ?>"></script>
