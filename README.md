@@ -80,6 +80,10 @@ Once connected, you can manage your chatbot settings, review chat logs, and cust
 
 ## Changelog
 
+### 1.1.1
+
+- All admin and storefront template output is escaped.
+
 ### 1.1.0
 
 - The assistant can read live prices and stock from your catalogue through a
